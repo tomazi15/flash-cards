@@ -1,6 +1,6 @@
 import { config } from "dotenv";
 config();
-
+import cors from "cors";
 import express, { Request, Response } from "express";
 import mongoose from "mongoose";
 
@@ -11,10 +11,18 @@ const PORT = 5001;
 const app = express();
 
 app.use(express.json());
+app.use(
+  cors({
+    origin: "*",
+  })
+);
+
+app.get("/decks", async (req: Request, res: Response) => {
+  const getDecks = await DeckModel.find();
+  res.json(getDecks);
+});
 
 app.post("/decks", async (req: Request, res: Response) => {
-  console.log(req.body);
-
   const newDeck = new DeckModel({
     title: req.body.title,
   });
